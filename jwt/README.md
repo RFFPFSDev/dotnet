@@ -4,6 +4,10 @@
 
 ![JWT flow](./image-2.png)
 
+"401 Unauthorized" status code indicates that the request lacks valid authentication credentials. 
+
+"403 Forbidden" status code signifies that the server understands the request but refuses to fulfill it.
+
 Advantages:
 - Ligthweight
 - It can be used in mulitple platforms like web, mobile, desktop and etc
