@@ -7,13 +7,30 @@
 	},
 	"item": [
 		{
-			"name": "New Request",
+			"name": "Login adminuser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {\r",
+							"    var jsonResponse = pm.response.json();\r",
+							"    var token = jsonResponse.token;\r",
+							"\r",
+							"    pm.environment.set(\"authToken\", token);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Username\" : \"test\",\r\n    \"Password\" : \"123\"\r\n}",
+					"raw": "{\r\n    \"Username\" : \"adminuser\",\r\n    \"Password\" : \"password\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,6 +48,115 @@
 						"api",
 						"auth",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login basicuser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {\r",
+							"    var jsonResponse = pm.response.json();\r",
+							"    var token = jsonResponse.token;\r",
+							"\r",
+							"    pm.environment.set(\"authToken\", token);\r",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Username\" : \"basicuser\",\r\n    \"Password\" : \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5179/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5179",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5245/api/tasks/alltasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5245",
+					"path": [
+						"api",
+						"tasks",
+						"alltasks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all basic tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5245/api/tasks/basictasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5245",
+					"path": [
+						"api",
+						"tasks",
+						"basictasks"
 					]
 				}
 			},
