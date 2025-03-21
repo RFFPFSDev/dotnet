@@ -52,7 +52,13 @@ Endpoint:
 - Should not store sensitive info since it is stored on client-side
 - On client-side, it should be stored in a safe place.
 
+# Invalidate token unexpired after logout
+	
 # Refresh tokens 
+
+Instead of providing the user with an access token that has a long expiration time, issue a short-lived access token along with a refresh token
+
+Reason of using Refresh token: Validating a signed token is less costly, but revoking is difficult.
 
 ```
   +--------+                                           +---------------+
