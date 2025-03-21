@@ -7,6 +7,14 @@ public class AuthController(
         ITokenService _tokenService
     ) : Controller
 {
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] Models.LogoutRequest model)
+    {
+        // Remove RefreshToken
+        return Ok();
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Models.LoginRequest model)
     {
@@ -61,7 +69,16 @@ public class AuthController(
                 return BadRequest("Invalid");
             }
 
-            return Ok(new { Token = refreshTokenFromDb });
+            var user = _userService.GetUser(userName);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid");
+            }
+
+            var newToken = _tokenService.GenerateJwtToken(user);
+
+            return Ok(new { Token = newToken });
         }
         catch (Exception ex)
         {

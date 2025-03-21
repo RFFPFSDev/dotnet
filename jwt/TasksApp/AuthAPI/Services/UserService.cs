@@ -32,6 +32,22 @@ public class UserService : IUserService
     {
         var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
 
+        if (userFromDb is null || userFromDb.HashPassword != password)
+        {
+            return null;
+        }
+
+        return new UserDto()
+        {
+            Username = userFromDb.Username,
+            Role = userFromDb.Role,
+        };
+    }
+
+    public UserDto GetUser(string userName)
+    {
+        var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
+
         if (userFromDb is null)
         {
             return null;
