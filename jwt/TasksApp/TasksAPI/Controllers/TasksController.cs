@@ -26,4 +26,14 @@ public class TasksController : Controller
             new TaskDto { Id = 3, Name = "Basic Task 2"}
         });
     }
+
+    [HttpGet("defaulttasks")]
+    public async Task<IActionResult> GetDefaultTasks()
+    {
+        return Ok(new List<TaskDto>()
+        {
+            new TaskDto { Id = 4, Name = "Default Task 1"},
+            new TaskDto { Id = 5, Name = "Default Task 2"}
+        });
+    }
 }

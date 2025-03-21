@@ -161,6 +161,37 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get all default tasks",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5245/api/tasks/defaulttasks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5245",
+					"path": [
+						"api",
+						"tasks",
+						"defaulttasks"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

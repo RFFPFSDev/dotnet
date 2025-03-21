@@ -7,15 +7,29 @@
 
 # Authentication
 
-If client modifies JWT or if server doesn't validate JWT using its own secret key on server side, client gets "401 Unauthorized"
+Client gets "401 Unauthorized" if:
+
+* Client modifies JWT
+* Server doesn't validate JWT using its own secret key on server side
+* JWT is expired
 
 "401 Unauthorized" status code indicates that the request lacks valid authentication credentials. 
 
 # Authorization
 
-If client tries to access a resource (endpoint for example in a API) and it doesn't have the permission (example, role: Admin), client gets "403 Forbidden"
+Client gets "403 Forbidden" if:
+
+* Client tries to access a resource (endpoint for example in a API) and it doesn't have the permission (example, role: Admin), 
 
 "403 Forbidden" status code signifies that the server understands the request but refuses to fulfill it.
+
+## API Validations
+
+Endpoint:
+
+* No [Authorize]: No Authentication
+* [Authorize]: There is Authentication
+* [Authorize(Roles = "Admin")]: There is Authentication and Authorization for user with role equals Admin
 
 # JWT JSON
 
