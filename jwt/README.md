@@ -51,3 +51,26 @@ Endpoint:
 - Manually mark non-expired JWT as invalid on logout
 - Should not store sensitive info since it is stored on client-side
 - On client-side, it should be stored in a safe place.
+
+# Refresh tokens 
+
++--------+                                           +---------------+
+  |        |--(A)------- Authorization Grant --------->|               |
+  |        |                                           |               |
+  |        |<-(B)----------- Access Token -------------|               |
+  |        |               & Refresh Token             |               |
+  |        |                                           |               |
+  |        |                            +----------+   |               |
+  |        |--(C)---- Access Token ---->|          |   |               |
+  |        |                            |          |   |               |
+  |        |<-(D)- Protected Resource --| Resource |   | Authorization |
+  | Client |                            |  Server  |   |     Server    |
+  |        |--(E)--- Expired Token ---->|          |   |               |
+  |        |                            |          |   |               |
+  |        |<-(F)- Invalid Token Error -|          |   |               |
+  |        |                            +----------+   |               |
+  |        |                                           |               |
+  |        |--(G)----------- Refresh Token ----------->|               |
+  |        |                                           |               |
+  |        |<-(H)----------- Access Token -------------|               |
+  +--------+           & Optional Refresh Token        +---------------+
