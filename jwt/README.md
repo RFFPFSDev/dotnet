@@ -54,6 +54,7 @@ Endpoint:
 
 # Refresh tokens 
 
+```
 +--------+                                           +---------------+
   |        |--(A)------- Authorization Grant --------->|               |
   |        |                                           |               |
@@ -74,3 +75,4 @@ Endpoint:
   |        |                                           |               |
   |        |<-(H)----------- Access Token -------------|               |
   +--------+           & Optional Refresh Token        +---------------+
+  ```
