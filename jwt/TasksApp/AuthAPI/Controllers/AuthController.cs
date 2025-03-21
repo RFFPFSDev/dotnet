@@ -10,20 +10,63 @@ public class AuthController(
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] Models.LoginRequest model)
     {
-        if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+        try
         {
-            return BadRequest("Invalid login request.");
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+            {
+                return BadRequest("Invalid login request.");
+            }
+
+            var user = _userService.Authenticate(model.Username, model.Password);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid credentials.");
+            }
+
+            var token = _tokenService.GenerateJwtToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken(user.Username);
+            _userService.SaveRefreshToken(user.Username, refreshToken);
+
+            return Ok(new { Token = token, RefreshToken = refreshToken });
         }
-
-        var user = await _userService.AuthenticateAsync(model.Username, model.Password);
-
-        if (user == null)
+        catch (Exception ex)
         {
-            return Unauthorized("Invalid credentials.");
+            // Log exception
+            return StatusCode(StatusCodes.Status500InternalServerError, null);
         }
+    }
 
-        var token = _tokenService.GenerateJwtToken(user);
+    [HttpPost("refreshtoken")]
+    public async Task<IActionResult> GetAccessToken([FromBody] AccessTokenRequest accessTokenRequest)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(accessTokenRequest?.RefreshToken))
+            {
+                return BadRequest("Invalid");
+            }
 
-        return Ok(new { Token = token });
+            var userName = _tokenService.GetUserNameFromRefreshToken(accessTokenRequest?.RefreshToken);
+
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                return BadRequest("Invalid");
+            }
+
+            var refreshTokenFromDb = _userService.GetRefreshToken(userName);
+
+            if (string.IsNullOrWhiteSpace(refreshTokenFromDb) || accessTokenRequest.RefreshToken != refreshTokenFromDb)
+            {
+                return BadRequest("Invalid");
+            }
+
+            return Ok(new { Token = refreshTokenFromDb });
+        }
+        catch (Exception ex)
+        {
+            // Log exception
+            return StatusCode(StatusCodes.Status500InternalServerError, null);
+        }
     }
 }

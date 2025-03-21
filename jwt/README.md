@@ -58,7 +58,9 @@ Endpoint:
 
 Instead of providing the user with an access token that has a long expiration time, issue a short-lived access token along with a refresh token
 
-Reason of using Refresh token: Validating a signed token is less costly, but revoking is difficult.
+Reason of using Refresh token: 
+* Validating a signed token is less costly, but revoking is difficult. By having the access tokens be short lived, JWT easily expires rather than revoked explicitly.
+* Access tokens are exchanged with (potentially many) resource servers, which increases the chance of leakage. Refresh tokens are only ever exchanged with the authorization server. Again, the short-livedness of access tokens is at least some level of mitigation.
 
 ```
   +--------+                                           +---------------+

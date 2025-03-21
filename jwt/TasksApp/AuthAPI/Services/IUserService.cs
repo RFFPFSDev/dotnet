@@ -2,5 +2,9 @@
 
 public interface IUserService
 {
-    Task<UserDto> AuthenticateAsync(string username, string password);
+    UserDto Authenticate(string username, string password);
+
+    void SaveRefreshToken(string userName, string refreshToken);
+
+    string GetRefreshToken(string userName);
 }

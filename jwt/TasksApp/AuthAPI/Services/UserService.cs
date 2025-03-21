@@ -2,18 +2,69 @@
 
 public class UserService : IUserService
 {
-    public async Task<UserDto> AuthenticateAsync(string username, string password)
+    public Dictionary<string, UserEntity> UserDatabase = new Dictionary<string, UserEntity>()
     {
-        if (username == "adminuser" && password == "password")
         {
-            return new UserDto { Id = 1, Username = "user123", Role = "Admin" };
+            "adminuser",
+            new UserEntity()
+            {
+                Id = Guid.Parse("53f5e9c0-7b84-4ced-a9b0-861bab2539a1"),
+                Username = "adminuser",
+                Role = "Admin",
+                HashPassword = "password",
+                RefreshToken = string.Empty,
+            }
+        },
+        {
+            "basicuser",
+            new UserEntity()
+            {
+                Id = Guid.Parse("98649599-d0b2-42a7-80cc-79d8dd8ba2a7"),
+                Username = "basicuser",
+                Role = "Basic",
+                HashPassword = "password",
+                RefreshToken = string.Empty,
+            }
+        },
+    };
+
+    public UserDto Authenticate(string userName, string password)
+    {
+        var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
+
+        if (userFromDb is null)
+        {
+            return null;
         }
 
-        if (username == "basicuser" && password == "password")
+        return new UserDto()
         {
-            return new UserDto { Id = 1, Username = "userABC", Role = "Basic" };
+            Username = userFromDb.Username,
+            Role = userFromDb.Role,
+        };
+    }
+
+    public void SaveRefreshToken(string userName, string refreshToken)
+    {
+        var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
+
+        if (userFromDb is null)
+        {
+            throw new Exception("User doesn't exist");
         }
 
-        return null;
+        userFromDb.RefreshToken = refreshToken;
+    }
+
+    public string GetRefreshToken(string userName)
+    {
+        var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
+
+        if (userFromDb is null)
+        {
+            throw new Exception("User doesn't exist");
+        }
+
+        return userFromDb.RefreshToken;
     }
 }
