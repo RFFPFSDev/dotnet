@@ -4,5 +4,5 @@ public interface ITokenService
 {
     string GenerateJwtToken(UserDto user);
     string GenerateRefreshToken(string userName);
-    string GetUserNameFromRefreshToken(string refreshToken);
+    (string userName, DateTime utcnow) GetUserNameFromRefreshToken(string refreshToken);
 }

@@ -8,5 +8,7 @@ public interface IUserService
 
     void SaveRefreshToken(string userName, string refreshToken);
 
-    string GetRefreshToken(string userName);
+    string GetRefreshToken(string userName, DateTime datetimeToke);
+
+    void CleanRefreshToken(string userName);
 }

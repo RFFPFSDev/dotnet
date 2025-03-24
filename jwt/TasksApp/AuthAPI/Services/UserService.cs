@@ -72,8 +72,15 @@ public class UserService : IUserService
         userFromDb.RefreshToken = refreshToken;
     }
 
-    public string GetRefreshToken(string userName)
+    public string GetRefreshToken(string userName, DateTime datetimeToken)
     {
+        var utcNow = DateTime.UtcNow;
+
+        if (utcNow > datetimeToken)
+        {
+            throw new Exception("Refresh Token expired");
+        }
+
         var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
 
         if (userFromDb is null)
@@ -82,5 +89,17 @@ public class UserService : IUserService
         }
 
         return userFromDb.RefreshToken;
+    }
+
+    public void CleanRefreshToken(string userName)
+    {
+        var userFromDb = UserDatabase.FirstOrDefault(userDb => userDb.Value.Username == userName).Value;
+
+        if (userFromDb is null)
+        {
+            throw new Exception("User doesn't exist");
+        }
+
+        userFromDb.RefreshToken = string.Empty;
     }
 }

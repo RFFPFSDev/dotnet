@@ -9,14 +9,27 @@ public class AuthController(
 {
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] Models.LogoutRequest model)
+    public async Task<IActionResult> Logout([FromBody] LogoutRequest model)
     {
-        // Remove RefreshToken
-        return Ok();
+        try
+        {
+            if (string.IsNullOrWhiteSpace(model.Username))
+            {
+                return BadRequest("Invalid logout request.");
+            }
+
+            _userService.CleanRefreshToken(model.Username);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            // Log exception
+            return StatusCode(StatusCodes.Status500InternalServerError, null);
+        }
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] Models.LoginRequest model)
+    public async Task<IActionResult> Login([FromBody] LoginRequest model)
     {
         try
         {
@@ -55,14 +68,14 @@ public class AuthController(
                 return BadRequest("Invalid");
             }
 
-            var userName = _tokenService.GetUserNameFromRefreshToken(accessTokenRequest?.RefreshToken);
+            var (userName, datetimeToken) = _tokenService.GetUserNameFromRefreshToken(accessTokenRequest?.RefreshToken);
 
             if (string.IsNullOrWhiteSpace(userName))
             {
                 return BadRequest("Invalid");
             }
 
-            var refreshTokenFromDb = _userService.GetRefreshToken(userName);
+            var refreshTokenFromDb = _userService.GetRefreshToken(userName, datetimeToken);
 
             if (string.IsNullOrWhiteSpace(refreshTokenFromDb) || accessTokenRequest.RefreshToken != refreshTokenFromDb)
             {

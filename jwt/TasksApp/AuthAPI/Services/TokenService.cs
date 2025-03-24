@@ -35,11 +35,13 @@ public class TokenService(
             rng.GetBytes(randomBytes);
         }
 
-        var newBytes = Encoding.UTF8.GetBytes(userName + _delimiter).Concat(randomBytes).ToArray();
+        var expiredTime = DateTime.UtcNow.AddMinutes(10);
+
+        var newBytes = Encoding.UTF8.GetBytes(userName + _delimiter + expiredTime.ToString() + _delimiter).Concat(randomBytes).ToArray();
         return Convert.ToBase64String(newBytes);
     }
 
-    public string GetUserNameFromRefreshToken(string refreshToken)
+    public (string userName, DateTime utcnow) GetUserNameFromRefreshToken(string refreshToken)
     {
         try
         {
@@ -51,8 +53,19 @@ public class TokenService(
                 throw new ArgumentException("Invalid refresh token format.");
             }
 
-            string userName = refreshToken.Substring(0, separatorIndex);
-            return userName;
+            var userNamePlusUtcNow = refreshToken.Substring(0, separatorIndex);
+
+            separatorIndex = userNamePlusUtcNow.LastIndexOf(_delimiter);
+
+            if (separatorIndex == -1)
+            {
+                throw new ArgumentException("Invalid refresh token format.");
+            }
+
+            var userName = userNamePlusUtcNow.Substring(0, separatorIndex);
+            var UtcNow = userNamePlusUtcNow.Replace(userName + _delimiter, string.Empty);
+
+            return (userName, DateTime.Parse(UtcNow));
         }
         catch (Exception ex)
         {

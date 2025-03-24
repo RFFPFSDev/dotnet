@@ -1,9 +1,8 @@
 # JWT
 
-# TO DO
+This is not meant for production!
 
-* Invalidate refresh token after logout
-* Implement HashPassword with salt
+This is only to showcase internal validations like expired Refresh token
 
 # Authentication
 
