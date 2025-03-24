@@ -9,7 +9,7 @@ This is only to showcase internal validations like expired Refresh token
 Client gets "401 Unauthorized" if:
 
 * Client modifies JWT
-* Server doesn't validate JWT using its own secret key on server side
+* Server doesn't validate JWT after uses its own secret key on server side
 * JWT is expired
 
 "401 Unauthorized" status code indicates that the request lacks valid authentication credentials. 
