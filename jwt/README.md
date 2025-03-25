@@ -8,8 +8,8 @@ This is only to showcase internal validations like expired Refresh token
 
 Client gets "401 Unauthorized" if:
 
-* Client modifies JWT
-* Server doesn't validate JWT after uses its own secret key on server side
+* Client creates JWT using wrong secret key
+* Client modifies JWT and Server doesn't validate JWT after uses its own secret key on server side
 * JWT is expired
 
 "401 Unauthorized" status code indicates that the request lacks valid authentication credentials. 
@@ -18,38 +18,30 @@ Client gets "401 Unauthorized" if:
 
 Client gets "403 Forbidden" if:
 
-* Client tries to access a resource (endpoint for example in a API) and it doesn't have the permission (example, role: Admin), 
+* Client tries to access a resource (endpoint for example in a API) and it doesn't have the permission (example, use doesn't have role: Admin), 
 
 "403 Forbidden" status code signifies that the server understands the request but refuses to fulfill it.
 
-## API Validations
+## API Authorize validations
 
 Endpoint:
 
 * No [Authorize]: No Authentication
 * [Authorize]: There is Authentication
-* [Authorize(Roles = "Admin")]: There is Authentication and Authorization for user with role equals Admin
+* [Authorize(Roles = "Admin")]: There is Authentication and Admin Role Authorization
 
 # JWT JSON
+
+signature is used to validate if the JWT is valid
 
 ![JWT](./image-1.png)
 
 # Flow
 
+* Client sends user credentials and server sends back JWT to client if user is authenticated
+* Client sends request to server with JWT for a protected resource/endpoint and JWT returns response or 401/403 status code
+
 ![JWT flow](./image-2.png)
-
-# Advantages:
-
-- Ligthweight
-- It can be used in mulitple platforms like web, mobile, desktop and etc
-- Json. Easy to parse
-- Stateless. Server doesn't need to store user data (state) on server 
-
-# Disadvantages:
-
-- Manually mark non-expired JWT as invalid on logout
-- Should not store sensitive info since it is stored on client-side
-- On client-side, it should be stored in a safe place.
 
 # Refresh tokens 
 
