@@ -1,9 +1,5 @@
 # JWT
 
-This TasksApp code is not meant for production!
-
-This is only to showcase internal validations like expired Refresh token
-
 # Authentication
 
 Client gets "401 Unauthorized" if:
